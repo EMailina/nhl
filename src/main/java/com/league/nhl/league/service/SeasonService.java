@@ -20,7 +20,7 @@ public class SeasonService {
 
 	@Autowired
 	private MatchRepository matchRepository;
-	
+
 	public SeasonDto createSeason(SeasonDto seasonDto) {
 		Season season = SeasonMapper.INSTANCE.toEntity(seasonDto);
 		if (season.getYearOrigin() == null) {
@@ -34,13 +34,23 @@ public class SeasonService {
 	}
 
 	public List<SeasonDto> getAllSeasons() {
-		return seasonRepository.findAll().stream().map(SeasonMapper.INSTANCE::toDto).collect(Collectors.toList());
+		List<SeasonDto> seasons = seasonRepository.findAll().stream().map(season -> {
+			SeasonDto dto = SeasonMapper.INSTANCE.toDto(season);
+
+			// Count matches for the season
+			long matchCount = matchRepository.countBySeasonId(season.getId());
+			dto.setCountOfPlayedMatches((int) matchCount);
+
+			return dto;
+		}).collect(Collectors.toList());
+
+		return seasons;
 	}
 
 	public SeasonDto getSeason(Long seasonId) {
 		SeasonDto dto = SeasonMapper.INSTANCE.toDto(seasonRepository.findById(seasonId).get());
 		long matchCount = matchRepository.countBySeasonId(seasonId);
-		dto.setCountOfPlayedMatches((int)matchCount);
+		dto.setCountOfPlayedMatches((int) matchCount);
 		return dto;
 	}
 }
