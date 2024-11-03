@@ -33,6 +33,9 @@ public class Season {
 	@Column(name = "YEAR_PLAYED")
 	private String yearPlayed = "2024/2025";
 
+	@Column(name = "COUNT_OF_MATCHES")
+	private Integer countOfMatches = 1312;
+
 	public Long getId() {
 		return id;
 	}
@@ -71,6 +74,14 @@ public class Season {
 
 	public void setYearPlayed(String yearPlayed) {
 		this.yearPlayed = yearPlayed;
+	}
+
+	public Integer getCountOfMatches() {
+		return countOfMatches;
+	}
+
+	public void setCountOfMatches(Integer countOfMatches) {
+		this.countOfMatches = countOfMatches;
 	}
 
 }

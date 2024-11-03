@@ -12,4 +12,6 @@ import com.league.nhl.league.entity.Match;
 public interface MatchRepository extends JpaRepository<Match, Long> {
 
 	List<Match> findBySeasonId(Long seasonId, Sort sort);
+
+	long countBySeasonId(Long seasonId);
 }

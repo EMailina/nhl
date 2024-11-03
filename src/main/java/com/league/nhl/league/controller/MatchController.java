@@ -25,10 +25,10 @@ public class MatchController {
 	MatchService matchService;
 
 	@PostMapping("/create")
-	public MatchDto createMatch(@RequestBody MatchDto matchDto) {
+	public ResponseEntity<MatchDto> createMatch(@RequestBody MatchDto matchDto) {
 		Match createdMatch = matchService.createMatch(matchDto);
 		MatchDto createdMatchDTO = MatchMapper.INSTANCE.toDto(createdMatch);
-		return createdMatchDTO;
+		return ResponseEntity.ok(createdMatchDTO);
 	}
 
 	@GetMapping("/getMatchesForSeason/{seasonId}")

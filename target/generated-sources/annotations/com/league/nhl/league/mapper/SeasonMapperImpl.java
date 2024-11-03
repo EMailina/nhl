@@ -6,7 +6,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-11-03T16:03:30+0100",
+    date = "2024-11-03T18:59:40+0100",
     comments = "version: 1.3.1.Final, compiler: javac, environment: Java 17.0.8 (Oracle Corporation)"
 )
 public class SeasonMapperImpl implements SeasonMapper {
@@ -24,6 +24,7 @@ public class SeasonMapperImpl implements SeasonMapper {
         season.setGameType( seasonDto.getGameType() );
         season.setYearOrigin( seasonDto.getYearOrigin() );
         season.setYearPlayed( seasonDto.getYearPlayed() );
+        season.setCountOfMatches( seasonDto.getCountOfMatches() );
 
         return season;
     }
@@ -36,6 +37,7 @@ public class SeasonMapperImpl implements SeasonMapper {
 
         SeasonDto seasonDto = new SeasonDto();
 
+        seasonDto.setCountOfMatches( season.getCountOfMatches() );
         seasonDto.setId( season.getId() );
         seasonDto.setName( season.getName() );
         seasonDto.setGameType( season.getGameType() );

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +18,7 @@ import com.league.nhl.league.service.SeasonDataService;
 import com.league.nhl.league.service.SeasonService;
 
 @RestController
-@RequestMapping("/season")
+@RequestMapping("/api/season")
 public class SeasonController {
 
 	@Autowired
@@ -35,6 +36,12 @@ public class SeasonController {
 	@GetMapping("/getAll")
 	public ResponseEntity<List<SeasonDto>> getAllSeasons() {
 		List<SeasonDto> seasons = seasonService.getAllSeasons();
+		return ResponseEntity.ok(seasons);
+	}
+
+	@GetMapping("/getSeason/{seasonId}")
+	public ResponseEntity<SeasonDto> getAllSeasons(@PathVariable Long seasonId) {
+		SeasonDto seasons = seasonService.getSeason(seasonId);
 		return ResponseEntity.ok(seasons);
 	}
 
