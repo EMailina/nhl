@@ -99,7 +99,6 @@ public class SeasonDataService {
 
 		Map<Division, List<TeamTableDto>> teamsByDivision = sortedTeamTableDtos.stream()
 				.collect(Collectors.groupingBy(TeamTableDto::getDivision));
-		List<TeamTableDto> remainingTeams = new ArrayList<>();
 
 		for (Map.Entry<Division, List<TeamTableDto>> entry : teamsByDivision.entrySet()) {
 			List<TeamTableDto> divisionTeams = entry.getValue();
@@ -141,6 +140,8 @@ public class SeasonDataService {
 			dto.setTeamName(team.getName());
 			dto.setShortName(team.getShortName());
 			dto.setPlayedGames(calculatePlayedGames(seasonData));
+			dto.setDivision(team.getDivision());
+			dto.setWildCard(false);
 			return dto;
 		}).sorted(Comparator.comparingLong(this::calculateRankingScore).reversed() // Primary sort by points descending
 		).collect(Collectors.toList());
@@ -148,6 +149,32 @@ public class SeasonDataService {
 		int position = 1;
 		for (TeamTableDto dto : sortedTeamTableDtos) {
 			dto.setPosition(position++);
+		}
+		List<TeamTableDto> remainingTeamsByConference = new ArrayList<>();
+
+		Map<Division, List<TeamTableDto>> teamsByDivision = sortedTeamTableDtos.stream()
+				.collect(Collectors.groupingBy(TeamTableDto::getDivision));
+
+		for (Map.Entry<Division, List<TeamTableDto>> entry : teamsByDivision.entrySet()) {
+			List<TeamTableDto> divisionTeams = entry.getValue();
+
+			for (int i = 0; i < divisionTeams.size(); i++) {
+				TeamTableDto dto = divisionTeams.get(i);
+				dto.setPlayOff(i < 3);
+				if (i > 3 && i < 6) {
+					remainingTeamsByConference.add(dto);
+				}
+			}
+		}
+
+		for (int i = 0; i < remainingTeamsByConference.size(); i++) {
+			if (i < 2) {
+				remainingTeamsByConference.get(i).setWildCard(true);
+
+			} else {
+				remainingTeamsByConference.get(i).setWildCard(false);
+
+			}
 		}
 
 		return sortedTeamTableDtos;
@@ -158,7 +185,7 @@ public class SeasonDataService {
 	}
 
 	private long calculateRankingScore(TeamTableDto dto) {
-		long score = dto.getPoints() * 100000; // Arbitrary multiplier to give more weight to points
+		long score = dto.getPoints() * 100000;
 		score = score - dto.getPlayedGames() * 1000;
 		// Add total wins (including overtime wins)
 		score += (dto.getWins() + dto.getWinsOt()) * 100;
@@ -171,27 +198,15 @@ public class SeasonDataService {
 
 	public List<TeamTableDto> getTeamDivisionDataForSeason(Long seasonId, Division division) {
 
-		List<Team> teamList = teamRepository.findAllByDivision(division);
-
-		Map<Long, SeasonData> seasonDataMap = seasonDataRepository.findBySeasonId(seasonId).stream()
-				.collect(Collectors.toMap(SeasonData::getTeamId, data -> data));
-
-		List<TeamTableDto> sortedTeamTableDtos = teamList.stream().map(team -> {
-			SeasonData seasonData = seasonDataMap.get(team.getId());
-			TeamTableDto dto = SeasonDataMapper.INSTANCE.toTeamTableDto(seasonData);
-			dto.setTeamName(team.getName());
-			dto.setShortName(team.getShortName());
-			dto.setPlayedGames(calculatePlayedGames(seasonData));
-			return dto;
-		}).sorted(Comparator.comparingLong(this::calculateRankingScore).reversed() // Primary sort by points descending
-		).collect(Collectors.toList());
+		List<TeamTableDto> teams = this.getTeamConferenceDataForSeason(seasonId, division.getConference());
+		List<TeamTableDto> filteredTeams = teams.stream().filter(team -> team.getDivision().equals(division))
+				.collect(Collectors.toList());
 
 		int position = 1;
-		for (TeamTableDto dto : sortedTeamTableDtos) {
+		for (TeamTableDto dto : filteredTeams) {
 			dto.setPosition(position++);
 		}
-
-		return sortedTeamTableDtos;
+		return filteredTeams;
 	}
 
 	public List<OwnerPositionDto> getOwnerPositions(Long seasonId) {

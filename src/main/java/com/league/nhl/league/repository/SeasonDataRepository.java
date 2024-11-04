@@ -14,5 +14,5 @@ public interface SeasonDataRepository extends JpaRepository<SeasonData, Long> {
 
 	List<SeasonData> findByTeamId(Long teamId);
 
-	SeasonData findByTeamIdAndSeasonId(Long teamId, int seasonId);
+	SeasonData findByTeamIdAndSeasonId(Long teamId, Long seasonId);
 }

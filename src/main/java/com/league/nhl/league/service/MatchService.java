@@ -2,6 +2,7 @@ package com.league.nhl.league.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import com.league.nhl.league.repository.MatchRepository;
 import com.league.nhl.league.repository.SeasonDataRepository;
 import com.league.nhl.league.repository.TeamRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -33,19 +35,39 @@ public class MatchService {
 	private TeamRepository teamRepository;
 
 	@Transactional
-	public Match createMatch(MatchDto matchDto) {
+	public MatchViewDto createMatch(MatchDto matchDto) {
 		Match match = MatchMapper.INSTANCE.toEntity(matchDto);
 
-		SeasonData homeTeamData = teamDataRepository.findByTeamIdAndSeasonId(match.getHomeTeamId(), 1);
-		SeasonData awayTeamData = teamDataRepository.findByTeamIdAndSeasonId(match.getAwayTeamId(), 1);
+		SeasonData homeTeamData = teamDataRepository.findByTeamIdAndSeasonId(match.getHomeTeamId(),
+				matchDto.getSeasonId());
+		SeasonData awayTeamData = teamDataRepository.findByTeamIdAndSeasonId(match.getAwayTeamId(),
+				matchDto.getSeasonId());
 
 		updateTeamStatistics(homeTeamData, match.getHomeTeamScore(), match.getAwayTeamScore(), match.isOvertime());
 		updateTeamStatistics(awayTeamData, match.getAwayTeamScore(), match.getHomeTeamScore(), match.isOvertime());
 
 		teamDataRepository.save(homeTeamData);
 		teamDataRepository.save(awayTeamData);
+		match = matchRepository.save(match);
 
-		return matchRepository.save(match);
+		Optional<Team> homeTeam = teamRepository.findById(match.getHomeTeamId());
+		Optional<Team> awayTeam = teamRepository.findById(match.getAwayTeamId());
+
+		MatchViewDto dto = new MatchViewDto();
+		dto.setSeasonId(match.getSeasonId());
+		dto.setId(match.getId());
+		dto.setHomeTeamId(match.getHomeTeamId());
+		dto.setAwayTeamId(match.getAwayTeamId());
+		dto.setHomeTeamScore(match.getHomeTeamScore());
+		dto.setAwayTeamScore(match.getAwayTeamScore());
+		dto.setOvertime(match.isOvertime());
+		dto.setSimulated(match.isSimulated());
+		dto.setCreatedAt(match.getCreatedAt());
+		dto.setHomeTeamName(homeTeam.get().getName());
+		dto.setAwayTeamName(awayTeam.get().getName());
+		dto.setHomeTeamShortName(homeTeam.get().getShortName());
+		dto.setAwayTeamShortName(awayTeam.get().getShortName());
+		return dto;
 	}
 
 	private void updateTeamStatistics(SeasonData seasonData, int teamScore, int opponentScore, boolean isOvertime) {
@@ -61,6 +83,40 @@ public class MatchService {
 			seasonData.setLosses(seasonData.getLosses() + (teamScore < opponentScore ? 1 : 0));
 		}
 
+	}
+
+	@Transactional
+	public void deleteMatch(Long matchId) {
+		Match match = matchRepository.findById(matchId)
+				.orElseThrow(() -> new EntityNotFoundException("Match not found with ID: " + matchId));
+
+		SeasonData homeTeamData = teamDataRepository.findByTeamIdAndSeasonId(match.getHomeTeamId(),
+				match.getSeasonId());
+		SeasonData awayTeamData = teamDataRepository.findByTeamIdAndSeasonId(match.getAwayTeamId(),
+				match.getSeasonId());
+
+		revertTeamStatistics(homeTeamData, match.getHomeTeamScore(), match.getAwayTeamScore(), match.isOvertime());
+		revertTeamStatistics(awayTeamData, match.getAwayTeamScore(), match.getHomeTeamScore(), match.isOvertime());
+
+		teamDataRepository.save(homeTeamData);
+		teamDataRepository.save(awayTeamData);
+
+		matchRepository.delete(match);
+	}
+
+	private void revertTeamStatistics(SeasonData seasonData, int teamScore, int opponentScore, boolean isOvertime) {
+		seasonData.setGoalsScored(seasonData.getGoalsScored() - teamScore);
+		seasonData.setGoalsAgainst(seasonData.getGoalsAgainst() - opponentScore);
+
+		seasonData.setPoints(seasonData.getPoints() - calculatePoints(teamScore, opponentScore, isOvertime));
+
+		if (isOvertime) {
+			seasonData.setWinsOt(seasonData.getWinsOt() - (teamScore > opponentScore ? 1 : 0));
+			seasonData.setLossesOt(seasonData.getLossesOt() - (teamScore < opponentScore ? 1 : 0));
+		} else {
+			seasonData.setWins(seasonData.getWins() - (teamScore > opponentScore ? 1 : 0));
+			seasonData.setLosses(seasonData.getLosses() - (teamScore < opponentScore ? 1 : 0));
+		}
 	}
 
 	private int calculatePoints(int teamScore, int opponentScore, boolean overtime) {
@@ -96,6 +152,30 @@ public class MatchService {
 			return dto;
 		}).collect(Collectors.toList());
 
+	}
+
+	public List<MatchViewDto> getAllMatchesForSeasonAndTeam(Long seasonId, Long teamId) {
+		List<Match> matches = matchRepository.findBySeasonIdAndTeamId(seasonId, teamId);
+
+		Map<Long, Team> teams = teamRepository.findAll().stream().collect(Collectors.toMap(Team::getId, team -> team));
+
+		return matches.stream().map(match -> {
+			MatchViewDto dto = new MatchViewDto();
+			dto.setSeasonId(match.getSeasonId());
+			dto.setId(match.getId());
+			dto.setHomeTeamId(match.getHomeTeamId());
+			dto.setAwayTeamId(match.getAwayTeamId());
+			dto.setHomeTeamScore(match.getHomeTeamScore());
+			dto.setAwayTeamScore(match.getAwayTeamScore());
+			dto.setOvertime(match.isOvertime());
+			dto.setSimulated(match.isSimulated());
+			dto.setCreatedAt(match.getCreatedAt());
+			dto.setHomeTeamName(teams.get(dto.getHomeTeamId()).getName());
+			dto.setAwayTeamName(teams.get(dto.getAwayTeamId()).getName());
+			dto.setHomeTeamShortName(teams.get(dto.getHomeTeamId()).getShortName());
+			dto.setAwayTeamShortName(teams.get(dto.getAwayTeamId()).getShortName());
+			return dto;
+		}).collect(Collectors.toList());
 	}
 
 }
