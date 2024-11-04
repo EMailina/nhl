@@ -7,6 +7,7 @@ C:\workspace\nhl\src\main\java\com\league\nhl\league\controller\TeamController.j
 C:\workspace\nhl\src\main\java\com\league\nhl\league\dto\CreateSeasonDto.java
 C:\workspace\nhl\src\main\java\com\league\nhl\league\dto\MatchDto.java
 C:\workspace\nhl\src\main\java\com\league\nhl\league\dto\MatchViewDto.java
+C:\workspace\nhl\src\main\java\com\league\nhl\league\dto\OwnerPositionDto.java
 C:\workspace\nhl\src\main\java\com\league\nhl\league\dto\SeasonDto.java
 C:\workspace\nhl\src\main\java\com\league\nhl\league\dto\TeamDto.java
 C:\workspace\nhl\src\main\java\com\league\nhl\league\dto\TeamTableDto.java

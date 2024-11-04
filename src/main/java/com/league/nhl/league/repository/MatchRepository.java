@@ -14,4 +14,8 @@ public interface MatchRepository extends JpaRepository<Match, Long> {
 	List<Match> findBySeasonId(Long seasonId, Sort sort);
 
 	long countBySeasonId(Long seasonId);
+
+	List<Match> findBySeasonId(Long seasonId);
+
+	List<Match> findBySeasonIdAndSimulatedFalse(Long seasonId);
 }

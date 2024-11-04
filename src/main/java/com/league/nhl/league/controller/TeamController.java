@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.league.nhl.league.dto.OwnerPositionDto;
 import com.league.nhl.league.dto.TeamDto;
 import com.league.nhl.league.dto.TeamTableDto;
 import com.league.nhl.league.enums.Conference;
@@ -73,5 +74,11 @@ public class TeamController {
 	public ResponseEntity<List<TeamTableDto>> getTeamSeasonDataForDivision(@PathVariable Long seasonId, @PathVariable Division division) {
 		List<TeamTableDto> teamSeasonDataList = seasonDataService.getTeamDivisionDataForSeason(seasonId, division);
 		return ResponseEntity.ok(teamSeasonDataList);
+	}
+	
+	@GetMapping("/owner-table/{seasonId}")
+	public ResponseEntity<List<OwnerPositionDto>> getOwnerTable(@PathVariable Long seasonId) {
+		List<OwnerPositionDto> dtos = seasonDataService.getOwnerPositions(seasonId);
+		return ResponseEntity.ok(dtos);
 	}
 }

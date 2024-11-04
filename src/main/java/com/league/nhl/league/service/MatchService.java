@@ -88,6 +88,7 @@ public class MatchService {
 			dto.setAwayTeamScore(match.getAwayTeamScore());
 			dto.setOvertime(match.isOvertime());
 			dto.setSimulated(match.isSimulated());
+			dto.setCreatedAt(match.getCreatedAt());
 			dto.setHomeTeamName(teams.get(dto.getHomeTeamId()).getName());
 			dto.setAwayTeamName(teams.get(dto.getAwayTeamId()).getName());
 			dto.setHomeTeamShortName(teams.get(dto.getHomeTeamId()).getShortName());

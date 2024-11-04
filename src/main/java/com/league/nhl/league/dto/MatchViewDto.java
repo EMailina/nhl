@@ -1,11 +1,22 @@
 package com.league.nhl.league.dto;
 
+import java.time.LocalDateTime;
+
 public class MatchViewDto extends MatchDto {
 
 	private String homeTeamName;
 	private String awayTeamName;
 	private String homeTeamShortName;
 	private String awayTeamShortName;
+	private LocalDateTime createdAt;
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
 
 	public String getHomeTeamName() {
 		return homeTeamName;

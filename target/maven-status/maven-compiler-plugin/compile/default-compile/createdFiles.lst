@@ -10,6 +10,7 @@ com\league\nhl\league\entity\Team.class
 com\league\nhl\league\mapper\TeamMapperImpl.class
 com\league\nhl\league\repository\SeasonDataRepository.class
 com\league\nhl\league\controller\SeasonController.class
+com\league\nhl\league\dto\OwnerPositionDto.class
 com\league\nhl\league\enums\Owner.class
 com\league\nhl\league\repository\SeasonRepository.class
 com\league\nhl\league\mapper\SeasonMapperImpl.class

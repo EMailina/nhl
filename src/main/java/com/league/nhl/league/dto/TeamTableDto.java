@@ -1,5 +1,7 @@
 package com.league.nhl.league.dto;
 
+import com.league.nhl.league.enums.Conference;
+import com.league.nhl.league.enums.Division;
 import com.league.nhl.league.enums.Owner;
 
 public class TeamTableDto {
@@ -17,6 +19,42 @@ public class TeamTableDto {
 	private int goalsScored;
 	private int goalsAgainst;
 	private int pointsBeforeRound;
+	private Division division;
+	private Conference conference;
+	private boolean playOff;
+	private boolean wildCard;
+
+	public boolean isPlayOff() {
+		return playOff;
+	}
+
+	public void setPlayOff(boolean playOff) {
+		this.playOff = playOff;
+	}
+
+	public boolean isWildCard() {
+		return wildCard;
+	}
+
+	public void setWildCard(boolean wildCard) {
+		this.wildCard = wildCard;
+	}
+
+	public Division getDivision() {
+		return division;
+	}
+
+	public void setDivision(Division division) {
+		this.division = division;
+	}
+
+	public Conference getConference() {
+		return conference;
+	}
+
+	public void setConference(Conference conference) {
+		this.conference = conference;
+	}
 
 	public int getPlayedGames() {
 		return playedGames;

@@ -9,7 +9,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-11-03T19:26:48+0100",
+    date = "2024-11-04T19:10:50+0100",
     comments = "version: 1.3.1.Final, compiler: javac, environment: Java 17.0.8 (Oracle Corporation)"
 )
 public class MatchMapperImpl implements MatchMapper {
@@ -50,6 +50,7 @@ public class MatchMapperImpl implements MatchMapper {
         matchViewDto.setAwayTeamScore( match.getAwayTeamScore() );
         matchViewDto.setOvertime( match.isOvertime() );
         matchViewDto.setSimulated( match.isSimulated() );
+        matchViewDto.setCreatedAt( match.getCreatedAt() );
 
         return matchViewDto;
     }
