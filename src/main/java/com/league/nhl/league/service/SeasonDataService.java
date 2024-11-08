@@ -21,6 +21,7 @@ import com.league.nhl.league.enums.Conference;
 import com.league.nhl.league.enums.Division;
 import com.league.nhl.league.enums.Owner;
 import com.league.nhl.league.mapper.SeasonDataMapper;
+import com.league.nhl.league.repository.HistoryPositionRepository;
 import com.league.nhl.league.repository.MatchRepository;
 import com.league.nhl.league.repository.SeasonDataRepository;
 import com.league.nhl.league.repository.SeasonRepository;
@@ -43,6 +44,9 @@ public class SeasonDataService {
 
 	@Autowired
 	private SeasonDataRepository seasonDataRepository;
+
+	@Autowired
+	private HistoryPositionRepository historyPositionRepository;
 
 	public void initializeSeasonDataForTeams(Long seasonId, List<Long> teamIds) {
 		Season season = seasonRepository.findById(seasonId)
@@ -85,6 +89,7 @@ public class SeasonDataService {
 			dto.setPlayedGames(calculatePlayedGames(seasonData));
 			dto.setDivision(team.getDivision());
 			dto.setConference(team.getConference());
+			dto.setPositionBeforeRound(historyPositionRepository.findLastTeamData(team.getId()).get().getPosition());
 			return dto;
 		}).sorted(Comparator.comparingLong(this::calculateRankingScore).reversed() // Primary sort by points descending
 

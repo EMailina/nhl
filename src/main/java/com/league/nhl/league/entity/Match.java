@@ -7,7 +7,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -24,7 +23,7 @@ public class Match extends Auditable {
 
 	@Column(name = "AWAY_TEAM_ID", nullable = false)
 	private Long awayTeamId;
-	
+
 	@Column(name = "SEASON_ID", nullable = false)
 	private Long seasonId;
 
@@ -104,5 +103,4 @@ public class Match extends Auditable {
 		this.seasonId = seasonId;
 	}
 
-	
 }

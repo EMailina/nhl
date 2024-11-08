@@ -23,6 +23,15 @@ public class TeamTableDto {
 	private Conference conference;
 	private boolean playOff;
 	private boolean wildCard;
+	private int positionBeforeRound;
+
+	public int getPositionBeforeRound() {
+		return positionBeforeRound;
+	}
+
+	public void setPositionBeforeRound(int positionBeforeRound) {
+		this.positionBeforeRound = positionBeforeRound;
+	}
 
 	public boolean isPlayOff() {
 		return playOff;

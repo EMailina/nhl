@@ -178,4 +178,30 @@ public class MatchService {
 		}).collect(Collectors.toList());
 	}
 
+	private MatchViewDto mapToMatchViewDto(Match match, Optional<Team> homeTeam, Optional<Team> awayTeam) {
+		MatchViewDto dto = new MatchViewDto();
+		dto.setSeasonId(match.getSeasonId());
+		dto.setId(match.getId());
+		dto.setHomeTeamId(match.getHomeTeamId());
+		dto.setAwayTeamId(match.getAwayTeamId());
+		dto.setHomeTeamScore(match.getHomeTeamScore());
+		dto.setAwayTeamScore(match.getAwayTeamScore());
+		dto.setOvertime(match.isOvertime());
+		dto.setSimulated(match.isSimulated());
+		dto.setCreatedAt(match.getCreatedAt());
+
+		// Set names and short names based on Optional
+		if (homeTeam.isPresent()) {
+			dto.setHomeTeamName(homeTeam.get().getName());
+			dto.setHomeTeamShortName(homeTeam.get().getShortName());
+		}
+
+		if (awayTeam.isPresent()) {
+			dto.setAwayTeamName(awayTeam.get().getName());
+			dto.setAwayTeamShortName(awayTeam.get().getShortName());
+		}
+
+		return dto;
+	}
+
 }
