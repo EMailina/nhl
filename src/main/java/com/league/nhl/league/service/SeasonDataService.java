@@ -111,7 +111,7 @@ public class SeasonDataService {
 			for (int i = 0; i < divisionTeams.size(); i++) {
 				TeamTableDto dto = divisionTeams.get(i);
 				dto.setPlayOff(i < 3);
-				if (i > 3 && i < 6) {
+				if (i >= 3 && i < 6) {
 					remainingTeamsByConference.computeIfAbsent(dto.getConference(), k -> new ArrayList<>()).add(dto);
 				}
 			}
