@@ -9,7 +9,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-11-09T16:06:28+0100",
+    date = "2024-11-17T20:06:12+0100",
     comments = "version: 1.3.1.Final, compiler: javac, environment: Java 17.0.8 (Oracle Corporation)"
 )
 public class MatchMapperImpl implements MatchMapper {
