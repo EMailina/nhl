@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.league.nhl.league.dto.MatchDto;
+import com.league.nhl.league.dto.MatchInfoDto;
 import com.league.nhl.league.dto.MatchViewDto;
 import com.league.nhl.league.service.MatchService;
 
@@ -40,6 +41,12 @@ public class MatchController {
 	public ResponseEntity<List<MatchViewDto>> getAllMatchesForSeason(@PathVariable Long seasonId) {
 		List<MatchViewDto> matches = matchService.getAllMatchesForSeason(seasonId);
 		return ResponseEntity.ok(matches);
+	}
+	
+	@GetMapping("/getMatchesForSeason/{seasonId}/{teamId}")
+	public ResponseEntity<MatchInfoDto> getMatchInfoForSeasonAndTeam(@PathVariable Long seasonId, @PathVariable Long teamId) {
+		MatchInfoDto info = matchService.getMatchTeamInfo(seasonId, teamId);
+		return ResponseEntity.ok(info);
 	}
 
 	@GetMapping("/getMatchesForSeasonAndTeam/{seasonId}/{teamId}")

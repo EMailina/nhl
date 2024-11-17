@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.league.nhl.league.dto.MatchDto;
+import com.league.nhl.league.dto.MatchInfoDto;
 import com.league.nhl.league.dto.MatchViewDto;
 import com.league.nhl.league.entity.Match;
 import com.league.nhl.league.entity.SeasonData;
@@ -202,6 +203,62 @@ public class MatchService {
 		}
 
 		return dto;
+	}
+
+	public MatchInfoDto getMatchTeamInfo(Long seasonId, Long teamId) {
+		List<Match> matches = matchRepository.findBySeasonIdAndTeamId(seasonId, teamId);
+
+		MatchInfoDto dto = new MatchInfoDto();
+		dto.setId(teamId);
+
+		matches.forEach(match -> {
+			boolean isHomeTeam = match.getHomeTeamId().equals(teamId);
+			boolean isSimulated = match.isSimulated();
+			boolean isOvertime = match.isOvertime();
+
+			dto.setPlayedGames(dto.getPlayedGames() + 1);
+
+			if (isSimulated) {
+				dto.setPlayedSimGames(dto.getPlayedSimGames() + 1);
+			}
+
+			int teamScore = isHomeTeam ? match.getHomeTeamScore() : match.getAwayTeamScore();
+			int opponentScore = isHomeTeam ? match.getAwayTeamScore() : match.getHomeTeamScore();
+
+			// Wins and losses
+			if (teamScore > opponentScore) {
+				if (isSimulated) {
+					if (isOvertime) {
+						dto.setSimWinsOt(dto.getSimWinsOt() + 1);
+					} else {
+						dto.setSimWins(dto.getSimWins() + 1);
+					}
+				} else {
+					if (isOvertime) {
+						dto.setWinsOt(dto.getWinsOt() + 1);
+					} else {
+						dto.setWins(dto.getWins() + 1);
+					}
+				}
+			} else {
+				if (isSimulated) {
+					if (isOvertime) {
+						dto.setSimLossesOt(dto.getSimLossesOt() + 1);
+					} else {
+						dto.setSimLosses(dto.getSimLosses() + 1);
+					}
+				} else {
+					if (isOvertime) {
+						dto.setLossesOt(dto.getLossesOt() + 1);
+					} else {
+						dto.setLosses(dto.getLosses() + 1);
+					}
+				}
+			}
+		});
+
+		return dto;
+
 	}
 
 }

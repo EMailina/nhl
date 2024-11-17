@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.league.nhl.league.dto.OwnerPositionDto;
 import com.league.nhl.league.dto.TeamTableDto;
+import com.league.nhl.league.entity.HistoryPositionTeam;
 import com.league.nhl.league.entity.Match;
 import com.league.nhl.league.entity.Season;
 import com.league.nhl.league.entity.SeasonData;
@@ -81,6 +82,11 @@ public class SeasonDataService {
 		Map<Long, Team> teamMap = teamRepository.findAllById(teamIds).stream()
 				.collect(Collectors.toMap(Team::getId, team -> team));
 
+		  Map<Long, HistoryPositionTeam> historyPositions = historyPositionRepository
+		            .findLastPositionsByTeamIds(teamIds).stream()
+		            .collect(Collectors.toMap(HistoryPositionTeam::getTeamId, history -> history));
+		
+		
 		List<TeamTableDto> sortedTeamTableDtos = seasonDataList.stream().map(seasonData -> {
 			TeamTableDto dto = SeasonDataMapper.INSTANCE.toTeamTableDto(seasonData);
 			Team team = teamMap.get(seasonData.getTeamId());

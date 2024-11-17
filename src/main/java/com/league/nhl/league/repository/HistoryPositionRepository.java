@@ -1,5 +1,6 @@
 package com.league.nhl.league.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,5 +14,8 @@ public interface HistoryPositionRepository extends JpaRepository<HistoryPosition
 
 	@Query("SELECT h FROM HistoryPositionTeam h WHERE h.dateSaved = (SELECT MAX(h2.dateSaved) FROM HistoryPositionTeam h2 WHERE h2.teamId = h.teamId) AND h.teamId = :teamId")
 	Optional<HistoryPositionTeam> findLastTeamData(Long teamId);
+
+	@Query("SELECT h FROM HistoryPositionTeam h WHERE h.dateSaved = (SELECT MAX(h2.dateSaved) FROM HistoryPositionTeam h2 WHERE h2.teamId = h.teamId) AND h.teamId IN :teamIds")
+	List<HistoryPositionTeam> findLastPositionsByTeamIds(List<Long> teamIds);
 
 }
