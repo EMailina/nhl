@@ -82,11 +82,9 @@ public class SeasonDataService {
 		Map<Long, Team> teamMap = teamRepository.findAllById(teamIds).stream()
 				.collect(Collectors.toMap(Team::getId, team -> team));
 
-		  Map<Long, HistoryPositionTeam> historyPositions = historyPositionRepository
-		            .findLastPositionsByTeamIds(teamIds).stream()
-		            .collect(Collectors.toMap(HistoryPositionTeam::getTeamId, history -> history));
-		
-		
+		Map<Long, HistoryPositionTeam> historyPositions = historyPositionRepository.findLastPositionsByTeamIds(teamIds)
+				.stream().collect(Collectors.toMap(HistoryPositionTeam::getTeamId, history -> history));
+
 		List<TeamTableDto> sortedTeamTableDtos = seasonDataList.stream().map(seasonData -> {
 			TeamTableDto dto = SeasonDataMapper.INSTANCE.toTeamTableDto(seasonData);
 			Team team = teamMap.get(seasonData.getTeamId());
@@ -95,7 +93,7 @@ public class SeasonDataService {
 			dto.setPlayedGames(calculatePlayedGames(seasonData));
 			dto.setDivision(team.getDivision());
 			dto.setConference(team.getConference());
-			dto.setPositionBeforeRound(historyPositionRepository.findLastTeamData(team.getId()).get().getPosition());
+			dto.setPositionBeforeRound(historyPositions.get(team.getId()).getPosition());
 			return dto;
 		}).sorted(Comparator.comparingLong(this::calculateRankingScore).reversed() // Primary sort by points descending
 
