@@ -44,6 +44,18 @@ public class TeamController {
 				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 	}
 
+	@GetMapping("/getTeamInfo/{seasonId}/{teamId}")
+	public TeamTableDto getExtendedTeamById(@PathVariable Long seasonId, @PathVariable Long teamId) {
+		return teamService.getTeamById(seasonId, teamId);
+
+	}
+	
+	@GetMapping("/getTeamInfo/{seasonId}/{teamId1}/{teamId2}")
+	public List<TeamTableDto> getExtendedTeamById(@PathVariable Long seasonId, @PathVariable Long teamId1, @PathVariable Long teamId2) {
+		return teamService.getExtendedTeams(seasonId, teamId1, teamId2);
+
+	}
+
 	// Create a new team
 	@PostMapping("/create")
 	public ResponseEntity<TeamDto> createTeam(@RequestBody TeamDto TeamDto) {
@@ -63,19 +75,21 @@ public class TeamController {
 		List<TeamTableDto> teamSeasonDataList = seasonDataService.getTeamSeasonDataForSeason(seasonId);
 		return ResponseEntity.ok(teamSeasonDataList);
 	}
-	
+
 	@GetMapping("/teams-data/{seasonId}/{conference}")
-	public ResponseEntity<List<TeamTableDto>> getTeamSeasonDataForConference(@PathVariable Long seasonId, @PathVariable Conference conference) {
+	public ResponseEntity<List<TeamTableDto>> getTeamSeasonDataForConference(@PathVariable Long seasonId,
+			@PathVariable Conference conference) {
 		List<TeamTableDto> teamSeasonDataList = seasonDataService.getTeamConferenceDataForSeason(seasonId, conference);
 		return ResponseEntity.ok(teamSeasonDataList);
 	}
-	
+
 	@GetMapping("/teams-data-division/{seasonId}/{division}")
-	public ResponseEntity<List<TeamTableDto>> getTeamSeasonDataForDivision(@PathVariable Long seasonId, @PathVariable Division division) {
+	public ResponseEntity<List<TeamTableDto>> getTeamSeasonDataForDivision(@PathVariable Long seasonId,
+			@PathVariable Division division) {
 		List<TeamTableDto> teamSeasonDataList = seasonDataService.getTeamDivisionDataForSeason(seasonId, division);
 		return ResponseEntity.ok(teamSeasonDataList);
 	}
-	
+
 	@GetMapping("/owner-table/{seasonId}")
 	public ResponseEntity<List<OwnerPositionDto>> getOwnerTable(@PathVariable Long seasonId) {
 		List<OwnerPositionDto> dtos = seasonDataService.getOwnerPositions(seasonId);

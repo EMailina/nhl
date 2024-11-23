@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.league.nhl.league.dto.OwnerPositionDto;
@@ -94,6 +93,8 @@ public class SeasonDataService {
 			dto.setDivision(team.getDivision());
 			dto.setConference(team.getConference());
 			dto.setPositionBeforeRound(historyPositions.get(team.getId()).getPosition());
+			dto.setPositionConferenceBeforeRound(historyPositions.get(team.getId()).getPositionConference());
+			dto.setPositionDivisionBeforeRound(historyPositions.get(team.getId()).getPositionDivision());
 			return dto;
 		}).sorted(Comparator.comparingLong(this::calculateRankingScore).reversed() // Primary sort by points descending
 
@@ -291,4 +292,74 @@ public class SeasonDataService {
 		dto.setGoalsScored(dto.getGoalsScored() + goalsScored);
 		dto.setGoalsAgainst(dto.getGoalsAgainst() + goalsAgainst);
 	}
+
+	public List<TeamTableDto> getTeamSeasonDataForSeasonAndTeam(Long seasonId, List<Long> searchTeamIds) {
+		List<SeasonData> seasonDataList = seasonDataRepository.findBySeasonId(seasonId);
+
+		List<Long> teamIds = seasonDataList.stream().map(seasonData -> seasonData.getTeamId())
+				.collect(Collectors.toList());
+
+		Map<Long, Team> teamMap = teamRepository.findAllById(teamIds).stream()
+				.collect(Collectors.toMap(Team::getId, team -> team));
+
+		Map<Long, HistoryPositionTeam> historyPositions = historyPositionRepository.findLastPositionsByTeamIds(teamIds)
+				.stream().collect(Collectors.toMap(HistoryPositionTeam::getTeamId, history -> history));
+
+		List<TeamTableDto> sortedTeamTableDtos = seasonDataList.stream().map(seasonData -> {
+			TeamTableDto dto = SeasonDataMapper.INSTANCE.toTeamTableDto(seasonData);
+			Team team = teamMap.get(seasonData.getTeamId());
+			dto.setTeamName(team.getName());
+			dto.setShortName(team.getShortName());
+			dto.setPlayedGames(calculatePlayedGames(seasonData));
+			dto.setDivision(team.getDivision());
+			dto.setConference(team.getConference());
+			dto.setPositionBeforeRound(historyPositions.get(team.getId()).getPosition());
+			dto.setPositionConferenceBeforeRound(historyPositions.get(team.getId()).getPositionConference());
+			dto.setPositionDivisionBeforeRound(historyPositions.get(team.getId()).getPositionDivision());
+			dto.setGoalieStrength(team.getGoalieStrength());
+			dto.setDefenseStrength(team.getDefenseStrength());
+			dto.setOffenseStrength(team.getOffenseStrength());
+
+			return dto;
+		}).sorted(Comparator.comparingLong(this::calculateRankingScore).reversed() // Primary sort by points descending
+
+		).collect(Collectors.toList());
+
+		int position = 1;
+		for (TeamTableDto dto : sortedTeamTableDtos) {
+			dto.setPosition(position++);
+		}
+
+		Map<Conference, List<TeamTableDto>> remainingTeamsByConference = new HashMap<>();
+
+		Map<Division, List<TeamTableDto>> teamsByDivision = sortedTeamTableDtos.stream()
+				.collect(Collectors.groupingBy(TeamTableDto::getDivision));
+
+		for (Map.Entry<Division, List<TeamTableDto>> entry : teamsByDivision.entrySet()) {
+			List<TeamTableDto> divisionTeams = entry.getValue();
+
+			for (int i = 0; i < divisionTeams.size(); i++) {
+				TeamTableDto dto = divisionTeams.get(i);
+				dto.setPlayOff(i < 3);
+				if (i >= 3 && i < 6) {
+					remainingTeamsByConference.computeIfAbsent(dto.getConference(), k -> new ArrayList<>()).add(dto);
+				}
+			}
+		}
+
+		for (Map.Entry<Conference, List<TeamTableDto>> entry : remainingTeamsByConference.entrySet()) {
+			List<TeamTableDto> wildcardCandidates = entry.getValue();
+
+			wildcardCandidates.sort(Comparator.comparingLong(this::calculateRankingScore).reversed());
+
+			int wildcardSpots = 2;
+			for (int i = 0; i < Math.min(wildcardSpots, wildcardCandidates.size()); i++) {
+				TeamTableDto wildcardTeam = wildcardCandidates.get(i);
+				wildcardTeam.setWildCard(true);
+			}
+		}
+
+	    return sortedTeamTableDtos.stream()
+	            .filter(dto -> searchTeamIds.contains(dto.getTeamId()))
+	            .collect(Collectors.toList());	}
 }

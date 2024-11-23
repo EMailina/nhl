@@ -178,6 +178,30 @@ public class MatchService {
 			return dto;
 		}).collect(Collectors.toList());
 	}
+	
+	public List<MatchViewDto> getAllMatchesForSeasonAnd2Teams(Long seasonId, Long teamId1, Long teamId2) {
+		List<Match> matches = matchRepository.findBySeasonIdAndTwoTeams(seasonId, teamId1, teamId2);
+
+		Map<Long, Team> teams = teamRepository.findAll().stream().collect(Collectors.toMap(Team::getId, team -> team));
+
+		return matches.stream().map(match -> {
+			MatchViewDto dto = new MatchViewDto();
+			dto.setSeasonId(match.getSeasonId());
+			dto.setId(match.getId());
+			dto.setHomeTeamId(match.getHomeTeamId());
+			dto.setAwayTeamId(match.getAwayTeamId());
+			dto.setHomeTeamScore(match.getHomeTeamScore());
+			dto.setAwayTeamScore(match.getAwayTeamScore());
+			dto.setOvertime(match.isOvertime());
+			dto.setSimulated(match.isSimulated());
+			dto.setCreatedAt(match.getCreatedAt());
+			dto.setHomeTeamName(teams.get(dto.getHomeTeamId()).getName());
+			dto.setAwayTeamName(teams.get(dto.getAwayTeamId()).getName());
+			dto.setHomeTeamShortName(teams.get(dto.getHomeTeamId()).getShortName());
+			dto.setAwayTeamShortName(teams.get(dto.getAwayTeamId()).getShortName());
+			return dto;
+		}).collect(Collectors.toList());
+	}
 
 	private MatchViewDto mapToMatchViewDto(Match match, Optional<Team> homeTeam, Optional<Team> awayTeam) {
 		MatchViewDto dto = new MatchViewDto();

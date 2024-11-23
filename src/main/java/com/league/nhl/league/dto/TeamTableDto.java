@@ -24,6 +24,36 @@ public class TeamTableDto {
 	private boolean playOff;
 	private boolean wildCard;
 	private int positionBeforeRound;
+	private int positionConferenceBeforeRound;
+	private int positionDivisionBeforeRound;
+	private Integer goalieStrength;
+	private Integer defenseStrength;
+	private Integer offenseStrength;
+	
+	
+	public Integer getGoalieStrength() {
+		return goalieStrength;
+	}
+
+	public void setGoalieStrength(Integer goalieStrength) {
+		this.goalieStrength = goalieStrength;
+	}
+
+	public Integer getDefenseStrength() {
+		return defenseStrength;
+	}
+
+	public void setDefenseStrength(Integer defenseStrength) {
+		this.defenseStrength = defenseStrength;
+	}
+
+	public Integer getOffenseStrength() {
+		return offenseStrength;
+	}
+
+	public void setOffenseStrength(Integer offenseStrength) {
+		this.offenseStrength = offenseStrength;
+	}
 
 	public int getPositionBeforeRound() {
 		return positionBeforeRound;
@@ -176,5 +206,22 @@ public class TeamTableDto {
 	public void setPointsBeforeRound(int pointsBeforeRound) {
 		this.pointsBeforeRound = pointsBeforeRound;
 	}
+
+	public int getPositionConferenceBeforeRound() {
+		return positionConferenceBeforeRound;
+	}
+
+	public void setPositionConferenceBeforeRound(int positionConferenceBeforeRound) {
+		this.positionConferenceBeforeRound = positionConferenceBeforeRound;
+	}
+
+	public int getPositionDivisionBeforeRound() {
+		return positionDivisionBeforeRound;
+	}
+
+	public void setPositionDivisionBeforeRound(int positionDivisionBeforeRound) {
+		this.positionDivisionBeforeRound = positionDivisionBeforeRound;
+	}
+	
 
 }

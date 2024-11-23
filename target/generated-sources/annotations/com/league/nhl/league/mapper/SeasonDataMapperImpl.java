@@ -6,7 +6,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-11-23T10:49:31+0100",
+    date = "2024-11-23T12:57:09+0100",
     comments = "version: 1.3.1.Final, compiler: javac, environment: Java 17.0.8 (Oracle Corporation)"
 )
 public class SeasonDataMapperImpl implements SeasonDataMapper {

@@ -42,9 +42,10 @@ public class MatchController {
 		List<MatchViewDto> matches = matchService.getAllMatchesForSeason(seasonId);
 		return ResponseEntity.ok(matches);
 	}
-	
+
 	@GetMapping("/getMatchesForSeason/{seasonId}/{teamId}")
-	public ResponseEntity<MatchInfoDto> getMatchInfoForSeasonAndTeam(@PathVariable Long seasonId, @PathVariable Long teamId) {
+	public ResponseEntity<MatchInfoDto> getMatchInfoForSeasonAndTeam(@PathVariable Long seasonId,
+			@PathVariable Long teamId) {
 		MatchInfoDto info = matchService.getMatchTeamInfo(seasonId, teamId);
 		return ResponseEntity.ok(info);
 	}
@@ -55,4 +56,12 @@ public class MatchController {
 		List<MatchViewDto> matches = matchService.getAllMatchesForSeasonAndTeam(seasonId, teamId);
 		return ResponseEntity.ok(matches);
 	}
+
+	@GetMapping("/getMatchesForSeasonAndTwoTeams/{seasonId}/{teamId1}/{teamId2}")
+	public ResponseEntity<List<MatchViewDto>> getAllMatchesForSeasonAndTwoTeams(@PathVariable Long seasonId,
+			@PathVariable Long teamId1, @PathVariable Long teamId2) {
+		List<MatchViewDto> matches = matchService.getAllMatchesForSeasonAnd2Teams(seasonId, teamId1, teamId2);
+		return ResponseEntity.ok(matches);
+	}
+
 }

@@ -23,4 +23,10 @@ public interface MatchRepository extends JpaRepository<Match, Long> {
 
 	@Query("SELECT m FROM Match m WHERE m.seasonId = :seasonId AND (m.homeTeamId = :teamId OR m.awayTeamId = :teamId) order by m.createdAt DESC")
 	List<Match> findBySeasonIdAndTeamId(@Param("seasonId") Long seasonId, @Param("teamId") Long teamId);
+
+	@Query("SELECT m FROM Match m WHERE m.seasonId = :seasonId AND "
+			+ "((m.homeTeamId = :teamId1 AND m.awayTeamId = :teamId2) OR "
+			+ "(m.homeTeamId = :teamId2 AND m.awayTeamId = :teamId1))")
+	List<Match> findBySeasonIdAndTwoTeams(@Param("seasonId") Long seasonId, @Param("teamId1") Long teamId1,
+			@Param("teamId2") Long teamId2);
 }
