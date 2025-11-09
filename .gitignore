@@ -28,3 +28,6 @@ build/
 
 ### VS Code ###
 .vscode/
+target/
+target/generated-sources/annotations/com/league/nhl/league/mapper/TeamMapperImpl.java
+target/classes/com/league/nhl/league/repository/MatchRepository.class

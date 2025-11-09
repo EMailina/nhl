@@ -19,6 +19,7 @@ com\league\nhl\league\service\SeasonDataService.class
 com\league\nhl\league\enums\GameType.class
 com\league\nhl\league\repository\TeamRepository.class
 com\league\nhl\league\entity\Match.class
+com\league\nhl\league\dto\MatchStatsDto.class
 com\league\nhl\team\resources\entity\Resource.class
 com\league\nhl\league\repository\MatchRepository.class
 com\league\nhl\league\dto\MatchViewDto.class

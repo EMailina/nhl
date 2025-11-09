@@ -29,4 +29,7 @@ public interface MatchRepository extends JpaRepository<Match, Long> {
 			+ "(m.homeTeamId = :teamId2 AND m.awayTeamId = :teamId1))")
 	List<Match> findBySeasonIdAndTwoTeams(@Param("seasonId") Long seasonId, @Param("teamId1") Long teamId1,
 			@Param("teamId2") Long teamId2);
+	
+    Long countBySeasonIdAndSimulated(Long seasonId, boolean simulated);
+
 }

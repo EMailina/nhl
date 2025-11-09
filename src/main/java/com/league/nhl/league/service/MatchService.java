@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.league.nhl.league.dto.MatchDto;
 import com.league.nhl.league.dto.MatchInfoDto;
+import com.league.nhl.league.dto.MatchStatsDto;
 import com.league.nhl.league.dto.MatchViewDto;
 import com.league.nhl.league.entity.Match;
 import com.league.nhl.league.entity.SeasonData;
@@ -178,7 +179,7 @@ public class MatchService {
 			return dto;
 		}).collect(Collectors.toList());
 	}
-	
+
 	public List<MatchViewDto> getAllMatchesForSeasonAnd2Teams(Long seasonId, Long teamId1, Long teamId2) {
 		List<Match> matches = matchRepository.findBySeasonIdAndTwoTeams(seasonId, teamId1, teamId2);
 
@@ -283,6 +284,13 @@ public class MatchService {
 
 		return dto;
 
+	}
+
+	public MatchStatsDto getAllMatchesStats(Long seasonId) {
+		Long simulatedTrueCount = matchRepository.countBySeasonIdAndSimulated(seasonId, true);
+		Long simulatedFalseCount = matchRepository.countBySeasonIdAndSimulated(seasonId, false);
+
+		return new MatchStatsDto(simulatedTrueCount, simulatedFalseCount);
 	}
 
 }

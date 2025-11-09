@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.league.nhl.league.dto.MatchDto;
 import com.league.nhl.league.dto.MatchInfoDto;
+import com.league.nhl.league.dto.MatchStatsDto;
 import com.league.nhl.league.dto.MatchViewDto;
 import com.league.nhl.league.service.MatchService;
 
@@ -61,6 +62,12 @@ public class MatchController {
 	public ResponseEntity<List<MatchViewDto>> getAllMatchesForSeasonAndTwoTeams(@PathVariable Long seasonId,
 			@PathVariable Long teamId1, @PathVariable Long teamId2) {
 		List<MatchViewDto> matches = matchService.getAllMatchesForSeasonAnd2Teams(seasonId, teamId1, teamId2);
+		return ResponseEntity.ok(matches);
+	}
+	
+	@GetMapping("/getMatchStatistics/{seasonId}")
+	public ResponseEntity<MatchStatsDto> getAllMatchesStats(@PathVariable Long seasonId) {
+		MatchStatsDto matches = matchService.getAllMatchesStats(seasonId);
 		return ResponseEntity.ok(matches);
 	}
 
