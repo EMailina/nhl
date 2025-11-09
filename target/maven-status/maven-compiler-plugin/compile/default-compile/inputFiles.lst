@@ -3,6 +3,8 @@ C:\workspace\nhl\src\main\java\com\league\nhl\conf\Auditable.java
 C:\workspace\nhl\src\main\java\com\league\nhl\conf\SimpleCORSFilter.java
 C:\workspace\nhl\src\main\java\com\league\nhl\league\controller\HistoryTeamController.java
 C:\workspace\nhl\src\main\java\com\league\nhl\league\controller\MatchController.java
+C:\workspace\nhl\src\main\java\com\league\nhl\league\controller\PlayoffController.java
+C:\workspace\nhl\src\main\java\com\league\nhl\league\controller\PredictionController.java
 C:\workspace\nhl\src\main\java\com\league\nhl\league\controller\SeasonController.java
 C:\workspace\nhl\src\main\java\com\league\nhl\league\controller\TeamController.java
 C:\workspace\nhl\src\main\java\com\league\nhl\league\dto\CreateSeasonDto.java
@@ -11,6 +13,8 @@ C:\workspace\nhl\src\main\java\com\league\nhl\league\dto\MatchInfoDto.java
 C:\workspace\nhl\src\main\java\com\league\nhl\league\dto\MatchStatsDto.java
 C:\workspace\nhl\src\main\java\com\league\nhl\league\dto\MatchViewDto.java
 C:\workspace\nhl\src\main\java\com\league\nhl\league\dto\OwnerPositionDto.java
+C:\workspace\nhl\src\main\java\com\league\nhl\league\dto\PlayoffPairDto.java
+C:\workspace\nhl\src\main\java\com\league\nhl\league\dto\PredictionDto.java
 C:\workspace\nhl\src\main\java\com\league\nhl\league\dto\SeasonDto.java
 C:\workspace\nhl\src\main\java\com\league\nhl\league\dto\TeamDto.java
 C:\workspace\nhl\src\main\java\com\league\nhl\league\dto\TeamTableDto.java
@@ -34,6 +38,8 @@ C:\workspace\nhl\src\main\java\com\league\nhl\league\repository\SeasonRepository
 C:\workspace\nhl\src\main\java\com\league\nhl\league\repository\TeamRepository.java
 C:\workspace\nhl\src\main\java\com\league\nhl\league\service\HistoryPositionService.java
 C:\workspace\nhl\src\main\java\com\league\nhl\league\service\MatchService.java
+C:\workspace\nhl\src\main\java\com\league\nhl\league\service\PlayoffService.java
+C:\workspace\nhl\src\main\java\com\league\nhl\league\service\PredictionService.java
 C:\workspace\nhl\src\main\java\com\league\nhl\league\service\SeasonDataService.java
 C:\workspace\nhl\src\main\java\com\league\nhl\league\service\SeasonService.java
 C:\workspace\nhl\src\main\java\com\league\nhl\league\service\TeamService.java

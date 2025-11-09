@@ -1,8 +1,10 @@
 com\league\nhl\league\mapper\MatchMapper.class
 com\league\nhl\league\enums\Conference.class
 com\league\nhl\league\dto\SeasonDto.class
+com\league\nhl\league\controller\PlayoffController.class
 com\league\nhl\league\entity\Team.class
 com\league\nhl\league\repository\SeasonRepository.class
+com\league\nhl\league\dto\PlayoffPairDto.class
 com\league\nhl\NhlApplication.class
 com\league\nhl\league\mapper\TeamMapper.class
 com\league\nhl\league\dto\CreateSeasonDto.class
@@ -13,6 +15,7 @@ com\league\nhl\league\mapper\SeasonDataMapperImpl.class
 com\league\nhl\league\controller\TeamController.class
 com\league\nhl\league\entity\SeasonData.class
 com\league\nhl\league\controller\MatchController.class
+com\league\nhl\league\service\PlayoffService.class
 com\league\nhl\team\resources\controller\ResourceController.class
 com\league\nhl\league\controller\HistoryTeamController.class
 com\league\nhl\league\service\SeasonDataService.class
